@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import './Dashboard.scss'
-import { addDataToAPI } from '../../../config/redux/action';
+import { addDataToAPI, getDataFromAPI, updateDataFromAPI } from '../../../config/redux/action';
 import { connect } from 'react-redux';
 
 class Dashboard extends Component {
@@ -8,24 +8,38 @@ class Dashboard extends Component {
         title: '',
         content: '',
         date: '',
+        textButton: 'SIMPAN',
+        noteId: ''
     }
+
+    // getDataFirebase = () => {
+    //     const starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
+    // }
+
     componentDidMount() {
-        const userData = localStorage.getItem('userData')
-        console.log('dashboard : ', JSON.parse(userData))
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        // console.log('dashboard : ', JSON.parse(userData))
+        this.props.getNotes(userData.uid);
     }
     
-    hanleSaveNotes = () => {
-        const {title, content} = this.state;
-        const {saveNotes} = this.props;
+    handleSaveNotes = () => {
+        const {title, content, textButton, noteId} = this.state;
+        const {saveNotes, updateNotes} = this.props;
+        const userData = JSON.parse(localStorage.getItem('userData'))
         const data = {
             title: title,
             content: content,
             date: new Date().getTime(),
-            userId: this.props.userData.uid
+            userId: userData.uid
         }
 
+        if(textButton === 'SIMPAN'){
+            saveNotes(data)
+        } else {
+            data.noteId = noteId
+            updateNotes(data)  
+        }
         console.log(data)
-        saveNotes(data)
     }
 
     onInputChange = (e, type) => {
@@ -34,8 +48,30 @@ class Dashboard extends Component {
         })
     }
 
+    updateNotes = (note) => {
+        console.log(note)
+        this.setState({
+            title: note.data.title,
+            content: note.data.content,
+            textButton: 'UPDATE',
+            noteId: note.id
+
+        })
+    }
+
+    cancelUpdate = () => {
+        this.setState({
+            title: '',
+            content: '',
+            textButton: 'SIMPAN'
+        })
+    }
+
     render(){
-        const {title, content, date} = this.state;
+        const {title, content, date, textButton} = this.state;
+        const {notes} = this.props
+        const {updateNotes} = this;
+        console.log('notesss: ',notes)
         return(
             <div className="container">
                 <div className="input-form">
@@ -43,25 +79,48 @@ class Dashboard extends Component {
                     <textarea placeholder="content" className="input-content" value={content} onChange={(e) =>this.onInputChange(e, 'content')}>
 
                     </textarea>
-                    <button className="save-btn" onClick={this.hanleSaveNotes}> simpan</button>
+                    {
+                        textButton === 'UPDATE' ? (
+                            <button className="save-btn" onClick={this.handleSaveNotes} onClick={this.cancelUpdate}>Cancel</button>
+                        ) : null
+                    }
+                    
+                    <br></br>
+                    <button className="save-btn" onClick={this.handleSaveNotes}>{textButton}</button>
+                    
                 </div>
                 <hr/>
-                <div className="card-content">
-                    <p className="title">Title</p>
-                    <p className="date">21 Sep 19</p>
-                    <p className="content">Content Notes</p>
-                </div>
+                {
+                    notes.length > 0 ? (
+                        <Fragment>
+                            {
+                                notes.map(note=> {
+                                    return (
+                                        <div className="card-content" key={note.id} onClick={() => updateNotes(note)} >
+                                            <p className="title">{note.data.title}</p>
+                                            <p className="date">{note.data.date}</p>
+                                            <p className="content">{note.data.content}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Fragment>
+                    ) : null
+                }
             </div>
         )
     }
 }
 
 const reduxState = (state) => ({
-    userData: state.user
+    userData: state.user,
+    notes: state.notes
 })
 
 const reduxDispatch = (dispatch) => ({
-    saveNotes : (data) => dispatch(addDataToAPI(data))
+    saveNotes : (data) => dispatch(addDataToAPI(data)),
+    getNotes: (data) => dispatch(getDataFromAPI(data)),
+    updateNotes: (data) => dispatch(updateDataFromAPI(data)),
 })
 
 export default connect(reduxState, reduxDispatch) (Dashboard);
