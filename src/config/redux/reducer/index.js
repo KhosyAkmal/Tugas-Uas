@@ -1,6 +1,7 @@
 const initialState = {
     popup: false,
     isLogin: false,
+    isLoading: false,
     user: 'Khosy'
   }
   
@@ -15,6 +16,12 @@ const initialState = {
       return {
         ...state,
         isLogin: action.value
+      }
+    }
+    if(action.type === 'CHANGE_ISLOADING'){
+      return {
+        ...state,
+        isLoading: action.value
       }
     }
     if(action.type === 'CHANGE_USER'){
