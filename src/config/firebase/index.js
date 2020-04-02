@@ -1,8 +1,9 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 // import 'firebase/firestore';
 
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyCPEOmj5aFzAjvrNsqBQ5Mn_hq9J_ETqv4",
     authDomain: "note-tugas-uts.firebaseapp.com",
     databaseURL: "https://note-tugas-uts.firebaseio.com",
@@ -14,5 +15,7 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
+  export const database = firebase.database();
 
   export default firebase;
