@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import "./Dashboard.scss";
+import "./Add.scss";
 import {
   addDataToAPI,
   getDataFromAPI,
@@ -9,7 +9,7 @@ import {
 import { connect } from "react-redux";
 
 
-class Dashboard extends Component {
+class List extends Component {
   state = {
     title: "",
     content: "",
@@ -30,7 +30,7 @@ class Dashboard extends Component {
 
   handleSaveNotes = () => {
     const { title, content, textButton, noteId } = this.state;
-    const { saveNotes, updateNotes } = this.props;
+    const { saveNotes, updateNotes, history } = this.props;
     const userData = JSON.parse(localStorage.getItem("userData"));
     const data = {
       title: title,
@@ -39,6 +39,8 @@ class Dashboard extends Component {
       userId: userData.uid,
     };
 
+    
+
     if (textButton === "SIMPAN") {
       saveNotes(data);
     } else {
@@ -46,6 +48,7 @@ class Dashboard extends Component {
       updateNotes(data);
     }
     console.log(data);
+    history.push('/list')
   };
 
   onInputChange = (e, type) => {
@@ -54,13 +57,13 @@ class Dashboard extends Component {
     });
   };
 
-  updateNotes = (note) => {
-    console.log(note);
+  updateNotes = (state) => {
+    console.log(state);
     this.setState({
-      title: note.data.title,
-      content: note.data.content,
+      title: state.data.title,
+      content: state.data.content,
       textButton: "UPDATE",
-      noteId: note.id,
+      stateId: state.id,
     });
   };
 
@@ -72,24 +75,47 @@ class Dashboard extends Component {
     });
   };
 
-  deleteNote = (e, note) => {
-    e.stopPropagation();
-    const { deleteNote } = this.props;
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const data = {
-      userId: userData.uid,
-      noteId: note.id,
-    };
-    deleteNote(data);
-  };
 
   render() {
     const { title, content, date, textButton } = this.state;
-    const { notes } = this.props;
-    const { updateNotes, cancelUpdate, deleteNote } = this;
-    console.log("notesss: ", notes);
+    const { state } = this.props.location;
+    
     return (
-      null
+      <div className="container">
+
+        <div className="input-form">
+          <input
+            placeholder="title"
+            className="input-title"
+            value={title}
+            placeholder={state != null ? state.title : "title"}
+            onChange={(e) => this.onInputChange(e, "title")}
+          />
+          <textarea
+            placeholder="content"
+            className="input-content"
+            value={content}
+            placeholder={state != null ? state.content : "content"}
+            onChange={(e) => this.onInputChange(e, "content")}
+          ></textarea>
+          {
+          textButton === "UPDATE"? (
+            <button
+              className="save-btn"
+              onClick={this.handleSaveNotes}
+              onClick={this.cancelUpdate}
+            >
+              Cancel
+            </button>
+          ) : null}
+
+          <br></br>
+          <button className="save-btn" onClick={this.handleSaveNotes}>
+            {textButton}
+          </button>
+        </div>
+        <hr />
+      </div>
     );
   }
 }
@@ -97,6 +123,7 @@ class Dashboard extends Component {
 const reduxState = (state) => ({
   userData: state.user,
   notes: state.notes,
+  state: state.notes
 });
 
 const reduxDispatch = (dispatch) => ({
@@ -108,4 +135,4 @@ const reduxDispatch = (dispatch) => ({
 
 
 
-export default connect(reduxState, reduxDispatch)(Dashboard);
+export default connect(reduxState, reduxDispatch)(List);

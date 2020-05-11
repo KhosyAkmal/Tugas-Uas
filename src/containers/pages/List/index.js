@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import "./Dashboard.scss";
+import "./List.scss";
 import {
   addDataToAPI,
   getDataFromAPI,
@@ -9,7 +9,7 @@ import {
 import { connect } from "react-redux";
 
 
-class Dashboard extends Component {
+class List extends Component {
   state = {
     title: "",
     content: "",
@@ -28,48 +28,17 @@ class Dashboard extends Component {
     this.props.getNotes(userData.uid);
   }
 
-  handleSaveNotes = () => {
-    const { title, content, textButton, noteId } = this.state;
-    const { saveNotes, updateNotes } = this.props;
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const data = {
-      title: title,
-      content: content,
-      date: new Date().getTime(),
-      userId: userData.uid,
-    };
-
-    if (textButton === "SIMPAN") {
-      saveNotes(data);
-    } else {
-      data.noteId = noteId;
-      updateNotes(data);
-    }
-    console.log(data);
-  };
-
-  onInputChange = (e, type) => {
-    this.setState({
-      [type]: e.target.value,
-    });
-  };
-
   updateNotes = (note) => {
     console.log(note);
-    this.setState({
-      title: note.data.title,
-      content: note.data.content,
-      textButton: "UPDATE",
-      noteId: note.id,
-    });
-  };
-
-  cancelUpdate = () => {
-    this.setState({
-      title: "",
-      content: "",
-      textButton: "SIMPAN",
-    });
+    const { history } = this.props;
+    history.push({
+      pathname: '/add',
+      state: {
+        title: note.data.title,
+        content: note.data.content,
+        textButton: "UPDATE",
+        noteId: note.id,}
+    })
   };
 
   deleteNote = (e, note) => {
@@ -89,7 +58,35 @@ class Dashboard extends Component {
     const { updateNotes, cancelUpdate, deleteNote } = this;
     console.log("notesss: ", notes);
     return (
-      null
+      <div className="container">
+        <h1>List Barang</h1>
+        <hr />
+        {notes.length > 0 ? (
+          <Fragment>
+            {notes.map((note) => {
+              return (
+                <div
+                  className="card-content"
+                  key={note.id}
+                  onClick={() => 
+                    updateNotes(note)
+                  }
+                >
+                  <p className="title">{note.data.title}</p>
+                  <p className="date"> {note.data.date}</p>
+                  <p className="content">{note.data.content}</p>
+                  <div
+                    className="delete-btn"
+                    onClick={(e) => deleteNote(e, note)}
+                  >
+                    X
+                  </div>
+                </div>
+              );
+            })}
+          </Fragment>
+        ) : null}
+      </div>
     );
   }
 }
@@ -97,6 +94,7 @@ class Dashboard extends Component {
 const reduxState = (state) => ({
   userData: state.user,
   notes: state.notes,
+  state: state.notes
 });
 
 const reduxDispatch = (dispatch) => ({
@@ -108,4 +106,4 @@ const reduxDispatch = (dispatch) => ({
 
 
 
-export default connect(reduxState, reduxDispatch)(Dashboard);
+export default connect(reduxState, reduxDispatch)(List);
