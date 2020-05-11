@@ -24,7 +24,7 @@ function App() {
   
   if (userData) {
     logout =  <Nav.Link href="/logout">Logout</Nav.Link>;
-    list =  <Nav.Link href="/listt">List</Nav.Link>;
+    list =  <Nav.Link href="/list">List</Nav.Link>;
     add =  <Nav.Link href="/add">Add</Nav.Link>;
   } else {
     login =  <Nav.Link href="/logout">Logout</Nav.Link>;
