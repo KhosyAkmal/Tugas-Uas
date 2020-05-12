@@ -13,38 +13,36 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import  {Navbar, Nav, NavDropdown} from 'react-bootstrap';
 
-
 function App() {
   const userData = JSON.parse(localStorage.getItem("userData"));
-  var logout;
   var login;
   var regis;
   var list;
   var add;
-  
+
   if (userData) {
-    logout =  <Nav.Link href="/logout">Logout</Nav.Link>;
     list =  <Nav.Link href="/list">List</Nav.Link>;
-    add =  <Nav.Link href="/add">Add</Nav.Link>;
+    add =  <Nav.Link href="/add" onClick>Add</Nav.Link>;
+    
   } else {
-    login =  <Nav.Link href="/logout">Logout</Nav.Link>;
-    regis =  <Nav.Link href="/logout">Logout</Nav.Link>;
+    login =  <Nav.Link href="/login">Login</Nav.Link>;
+    regis =  <Nav.Link href="/registrasi">Registrasi</Nav.Link>;
   }  
+
+
   return (
     <div>
       <div>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand href="#home">My Apps</Navbar.Brand>
+            <Navbar.Brand href="#home">Gudang Barang Logistik</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>;
                 {list}
                 {add}
-                {logout}
                 {login}
-                {regis}
-               
+                {regis}               
               </Nav>
             </Navbar.Collapse>
           </Navbar>

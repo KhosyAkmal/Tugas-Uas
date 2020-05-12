@@ -52,6 +52,7 @@ class List extends Component {
     deleteNote(data);
   };
 
+
   render() {
     const { title, content, date, textButton } = this.state;
     const { notes } = this.props;
