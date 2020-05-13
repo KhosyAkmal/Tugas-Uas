@@ -9,7 +9,7 @@ import {
 import { connect } from "react-redux";
 
 
-class List extends Component {
+class Add extends Component {
   state = {
     title: "",
     content: "",
@@ -77,7 +77,7 @@ class List extends Component {
 
 
   render() {
-    const { title, content, date, textButton } = this.state;
+    const { title, content, textButton } = this.state;
     const { state } = this.props.location;
     
     return (
@@ -135,4 +135,4 @@ const reduxDispatch = (dispatch) => ({
 
 
 
-export default connect(reduxState, reduxDispatch)(List);
+export default connect(reduxState, reduxDispatch)(Add);

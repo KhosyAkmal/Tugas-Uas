@@ -26,7 +26,7 @@ function App() {
     
   } else {
     login =  <Nav.Link href="/login">Login</Nav.Link>;
-    regis =  <Nav.Link href="/registrasi">Registrasi</Nav.Link>;
+    regis =  <Nav.Link href="/register">Registrasi</Nav.Link>;
   }  
 
 
