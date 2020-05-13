@@ -7,7 +7,7 @@ import {
   deleteDataFromAPI,
 } from "../../../config/redux/action";
 import { connect } from "react-redux";
-
+import  {Container, Row, Col} from 'react-bootstrap';
 
 
 class Dashboard extends Component {
@@ -26,11 +26,31 @@ class Dashboard extends Component {
     console.log("notesss: ", );
     return (
       <div>
-        {
-          userData != null? <button href="./login" onClick={this.handleLS}> Logout</button> : null
-        }
+        
+        <div>
+          <Container>
+            <Row classname="justify-content-md-center">
+              <Col>
+              <br/>
+              <br/>
+              <h2 align="center" >Selamat Datang</h2>
+              <h3 align="center" >Website ini bertujuan untuk mencatat barang yang akan masuk ke Gudang dari Supplier</h3>
+              <hr/>
+              <div align="center">
+              {userData != null? <button href="./login" onClick={this.handleLS}> Logout</button> : null}
+              </div>
+              
+              
+              </Col>
+  
+            
+            </Row>
+          </Container>
         
       </div>
+      </div>
+
+      
     );
   }
 }

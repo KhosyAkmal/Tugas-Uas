@@ -34,7 +34,7 @@ function App() {
     <div>
       <div>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand href="#home">Gudang Barang Logistik</Navbar.Brand>
+            <Navbar.Brand href="#home">Gudang Logistik</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
